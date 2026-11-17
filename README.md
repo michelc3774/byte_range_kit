@@ -30,3 +30,10 @@ The trade-off: each read pays an `open`/`close` pair. For workloads with many se
 - `offset == file_size` returns empty bytes rather than raising.
 - Negative `offset` or `length` raises `RangeError`.
 - Reads from a nonexistent file (with positive `length`) raise `FileNotFoundError`.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
